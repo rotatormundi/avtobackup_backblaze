@@ -30,10 +30,6 @@ def make_backup():
 
     print(f"[{datetime.now()}] Создаю бэкап: {backup_file}")
 
-    subprocess.run(
-        f"pg_dump postgresql://{DB_USER}:{DB_PASS}@localhost/{DB_NAME} > {backup_file}",
-        shell=True, check=True
-    )
     subprocess.run([
         "pg_dump",
         f"postgresql://{DB_USER}:{DB_PASS}@localhost/{DB_NAME}",
@@ -73,3 +69,4 @@ def main_loop():
 
 if __name__ == "__main__":
     main_loop()
+
