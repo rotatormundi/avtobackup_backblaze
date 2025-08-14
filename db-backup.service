@@ -1,0 +1,26 @@
+[Unit]
+Description=PostgreSQL Backup to Backblaze B2
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/dir
+
+
+ExecStart=/dir/venv/bin/python -u /dir/pg_b2_backup.py
+
+
+StandardOutput=journal
+StandardError=inherit
+
+Environment=PYTHONUNBUFFERED=1
+Environment="PATH=/dir/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+SyslogIdentifier=db-backup
+
+Restart=always
+RestartSec=5
+User=root
+
+[Install]
+WantedBy=multi-user.target
