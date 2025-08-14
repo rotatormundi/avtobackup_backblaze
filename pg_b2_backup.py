@@ -26,7 +26,7 @@ def get_b2():
 def make_backup():
     os.makedirs(BACKUP_DIR, exist_ok=True)
     date_str = datetime.now().strftime("%Y-%m-%d_%H-%M")
-    backup_file = f"{BACKUP_DIR}/{DB_NAME}_{date_str}.sql"
+    backup_file = f"{BACKUP_DIR}/{DB_NAME}_{date_str}.dump"
 
     print(f"[{datetime.now()}] Создаю бэкап: {backup_file}")
 
@@ -34,6 +34,12 @@ def make_backup():
         f"pg_dump postgresql://{DB_USER}:{DB_PASS}@localhost/{DB_NAME} > {backup_file}",
         shell=True, check=True
     )
+    subprocess.run([
+        "pg_dump",
+        f"postgresql://{DB_USER}:{DB_PASS}@localhost/{DB_NAME}",
+        "-Fc", "-Z", "6",
+        "-f", backup_file
+    ], check=True)
     return backup_file
 
 def upload_to_b2(b2_api, file_path):
