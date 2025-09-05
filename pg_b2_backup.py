@@ -29,7 +29,13 @@ def make_backup():
     backup_file = f"{BACKUP_DIR}/{DB_NAME}_{date_str}.dump"
 
     print(f"[{datetime.now()}] Создаю бэкап: {backup_file}")
-
+    
+    #For MySql
+    #     cmd = f"mysqldump -u{DB_USER} -p{DB_PASS} " \
+    #       f"--databases {DB_NAME} " \
+    #       f"--single-transaction --quick --no-tablespaces | gzip > {backup_file}"
+    # subprocess.run(cmd, shell=True, check=True)
+    
     subprocess.run([
         "pg_dump",
         f"postgresql://{DB_USER}:{DB_PASS}@localhost/{DB_NAME}",
@@ -69,4 +75,5 @@ def main_loop():
 
 if __name__ == "__main__":
     main_loop()
+
 
