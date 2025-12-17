@@ -60,20 +60,26 @@ def cleanup_old_backups(b2_api):
             print(f"Удаляю {file_version.file_name}")
             bucket.delete_file_version(file_version.id_, file_version.file_name)
 
+
 def main_loop():
     b2_api = get_b2()
     while True:
+        backup_file = None
         try:
             backup_file = make_backup()
             upload_to_b2(b2_api, backup_file)
             cleanup_old_backups(b2_api)
-            os.remove(backup_file)
         except Exception as e:
             print(f"[ОШИБКА] {e}")
+        finally:
+            if backup_file and os.path.exists(backup_file):
+                os.remove(backup_file)
+                print(f"[{datetime.now()}] Временный файл удалён: {backup_file}")
         print(f"Жду {INTERVAL_HOURS} часов...")
         time.sleep(INTERVAL_HOURS * 3600)
 
 if __name__ == "__main__":
     main_loop()
+
 
 
